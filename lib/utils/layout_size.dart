@@ -1,0 +1,1 @@
+int layoutWidthSize = 600;
