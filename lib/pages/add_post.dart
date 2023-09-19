@@ -20,7 +20,6 @@ class AddPost extends StatefulWidget {
   State<AddPost> createState() => _AddPostState();
 }
 
-TextEditingController getCaption = TextEditingController();
 
 class _AddPostState extends State<AddPost> {
   @override

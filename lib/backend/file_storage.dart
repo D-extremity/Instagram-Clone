@@ -7,6 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:instagram_clone/models/user_model.dart';
 import 'package:instagram_clone/provider/state_management.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class StorageMethods {
   final FirebaseStorage _storage = FirebaseStorage.instance;
@@ -26,7 +27,7 @@ class StorageMethods {
           .ref()
           .child("posts")
           .child(childName)
-          .child(Random().nextInt(999) as String);
+          .child(const Uuid().v1());
       UploadTask uploadTask = ref.putData(file);
       TaskSnapshot snap = await uploadTask;
       String downloadUrl = await snap.ref.getDownloadURL();
