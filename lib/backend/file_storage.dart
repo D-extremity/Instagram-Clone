@@ -1,12 +1,7 @@
-import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:instagram_clone/models/user_model.dart';
-import 'package:instagram_clone/provider/state_management.dart';
-import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 class StorageMethods {

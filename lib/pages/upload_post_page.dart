@@ -1,10 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:instagram_clone/backend/file_storage.dart';
 import 'package:instagram_clone/backend/firestore_methods.dart';
 import 'package:instagram_clone/models/user_model.dart';
-import 'package:instagram_clone/pages/add_post.dart';
 import 'package:instagram_clone/provider/state_management.dart';
 import 'package:instagram_clone/screens/mobile_layout.dart';
 import 'package:instagram_clone/utils/colors.dart';
@@ -13,7 +11,7 @@ import 'package:provider/provider.dart';
 
 class UploadPostPage extends StatefulWidget {
   final Uint8List image;
-  UploadPostPage({
+  const UploadPostPage({
     super.key,
     required this.user,
     required this.image,
@@ -35,19 +33,36 @@ class _UploadPostPageState extends State<UploadPostPage> {
     getCaption.dispose();
   }
 
+  bool _isLoading = false;
+
   void postImage(
       String uid, String username, String profileImage, Uint8List file) async {
     String res;
     try {
+      setState(() {
+        _isLoading = true;
+      });
       res = await FireStoreMethods()
           .uploadPost(getCaption.text, file, uid, profileImage, username);
       if (res == "success") {
+        // ignore: use_build_context_synchronously
         showSnackbar("Posted", context);
+        setState(() {
+          _isLoading = false;
+        });
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => const MobileLayout()));
       } else {
-        showSnackbar("Error Occurred", context);
+        showSnackbar("Error Occurred , Try Again", context);
+        setState(() {
+          _isLoading = false;
+        });
       }
     } catch (error) {
-      res = error.toString();
+      setState(() {
+        _isLoading = false;
+      });
+      res = "Error Occurred";
     }
   }
 
@@ -62,7 +77,7 @@ class _UploadPostPageState extends State<UploadPostPage> {
           leading: BackButton(
             onPressed: () {
               Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => MobileLayout()));
+                  MaterialPageRoute(builder: (context) => const MobileLayout()));
             },
           ),
           title: const Text("Post"),
@@ -87,30 +102,37 @@ class _UploadPostPageState extends State<UploadPostPage> {
           ],
         ),
         body: Padding(
-          padding: const EdgeInsets.only(top: 10),
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.1,
-            child: ListTile(
-              shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20))),
-              style: ListTileStyle.drawer,
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(widget.user.photoUrl),
-              ),
-              trailing: Image.memory(widget.image),
-              subtitle: SizedBox(
-                width: MediaQuery.of(context).size.width * 4.3,
-                child: TextField(
-                  controller: getCaption,
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Write Caption...",
+          padding: const EdgeInsets.only(top: 0),
+          child: Column(
+            children: [
+              _isLoading
+                  ? const LinearProgressIndicator()
+                  : const Padding(padding: EdgeInsets.zero),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.1,
+                child: ListTile(
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
+                  style: ListTileStyle.drawer,
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage(widget.user.photoUrl),
                   ),
-                  maxLength: 100,
-                  maxLines: 8,
+                  trailing: Image.memory(widget.image),
+                  subtitle: SizedBox(
+                    width: MediaQuery.of(context).size.width * 4.3,
+                    child: TextField(
+                      controller: getCaption,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Write Caption...",
+                      ),
+                      maxLength: 100,
+                      maxLines: 8,
+                    ),
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
         ),
       ),

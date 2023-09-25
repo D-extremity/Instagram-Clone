@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:instagram_clone/backend/authentications.dart';
 import 'package:instagram_clone/models/user_model.dart';
 
+
+/// Logged in user data will be available all over the app
 class UserProvider extends ChangeNotifier {
   UserAuthDetails? _user;
 
