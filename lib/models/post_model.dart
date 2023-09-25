@@ -34,12 +34,9 @@ class Post {
       'dateTime': dateTime,
       'photoUrl': photoUrl,
       'description': description,
-      'phostId':postId,
+      'postId': postId,
     };
   }
-
-
-
 
 //fetching data from firestore
   static Post fromSnap(DocumentSnapshot snap) {

@@ -3,10 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:instagram_clone/pages/add_post.dart';
 import 'package:instagram_clone/pages/home_timeline.dart';
-import 'package:instagram_clone/utils/colors.dart';
-// import 'package:instagram_clone/models/user_model.dart';
-// import 'package:instagram_clone/provider/state_management.dart';
-// import 'package:provider/provider.dart';
+import 'package:instagram_clone/models/user_model.dart';
+import 'package:instagram_clone/provider/state_management.dart';
+import 'package:provider/provider.dart';
 
 class MobileLayout extends StatefulWidget {
   const MobileLayout({super.key});
@@ -40,21 +39,20 @@ class _MobileLayoutState extends State<MobileLayout> {
   //   // print(snap.data());
   // }
   List<Widget> pages = [
-    HomeTimeline(),
-    Text("search"),
-    AddPost(),
-    Text("notifications"),
-    Text("profile"),
+    const HomeTimeline(),
+    const Text("search"),
+    const AddPost(),
+    const Text("notifications"),
+    const Text("profile"),
   ];
 
   @override
   Widget build(BuildContext context) {
-    // UserAuthDetails user =  Provider.of<UserProvider>(context).getUser;
+    UserAuthDetails user = Provider.of<UserProvider>(context).getUser;
     return SafeArea(
         child: Scaffold(
       body: IndexedStack(index: _currentPage, children: pages),
       bottomNavigationBar: BottomNavigationBar(
-       
         currentIndex: _currentPage,
         onTap: (value) {
           setState(() {
@@ -99,12 +97,11 @@ class _MobileLayoutState extends State<MobileLayout> {
               ),
               label: ""),
           BottomNavigationBarItem(
-              icon: Icon(
-                Icons.person_2_rounded,
-                color: _currentPage == 4
-                    ? const Color.fromARGB(255, 227, 177, 194)
-                    : Colors.white,
-                size: 30,
+              icon: CircleAvatar(
+                radius: 18,
+                child: Image.network(
+                  user.photoUrl,
+                ),
               ),
               label: ""),
         ],
